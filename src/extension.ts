@@ -1,24 +1,50 @@
+import '@girs/gnome-shell/extensions/global';
 import { Extension } from '@girs/gnome-shell/extensions/extension';
-import * as Main from '@girs/gnome-shell/ui/main';
+import Meta from '@girs/meta-17';
 import Keybindings from './keybinding';
 
 export default class SmartTilingExtension extends Extension {
   private keybindings?: Keybindings;
 
+  getWindow() {
+    return global.display.get_focus_window();
+  }
+
+  getMonitor(window: Meta.Window) {
+    const monitorIndex = window.get_monitor();
+    return global.display.get_monitor_geometry(monitorIndex);
+  }
+
   handleMoveWindowLeft() {
-    Main.notify('LEFT');
+    const window = this.getWindow();
+    const monitor = this.getMonitor(window);
+    window.move_resize_frame(
+      true,
+      monitor.x,
+      monitor.y,
+      Math.floor(monitor.width / 2),
+      monitor.height
+    );
   }
 
   handleMoveWindowRight() {
-    Main.notify('RIGHT');
+    const window = this.getWindow();
+    const monitor = this.getMonitor(window);
+    window.move_resize_frame(
+      true,
+      monitor.x + Math.floor(monitor.width / 2),
+      monitor.y,
+      Math.floor(monitor.width / 2),
+      monitor.height
+    );
   }
   
   handleMoveWindowUp() {
-    Main.notify('UP');
+    console.log('AAA');
   }
 
   handleMoveWindowDown() {
-    Main.notify('DOWN');
+    console.log('BBB');
   }
 
   override enable() {
@@ -33,10 +59,10 @@ export default class SmartTilingExtension extends Extension {
     
     this.keybindings = new Keybindings(keybindingsSettings);
     
-    this.keybindings.add('move-window-right', this.handleMoveWindowRight);
-    this.keybindings.add('move-window-left', this.handleMoveWindowLeft);
-    this.keybindings.add('move-window-up', this.handleMoveWindowUp);
-    this.keybindings.add('move-window-down', this.handleMoveWindowDown);
+    this.keybindings.add('move-window-right', this.handleMoveWindowRight.bind(this));
+    this.keybindings.add('move-window-left', this.handleMoveWindowLeft.bind(this));
+    this.keybindings.add('move-window-up', this.handleMoveWindowUp.bind(this));
+    this.keybindings.add('move-window-down', this.handleMoveWindowDown.bind(this));
   }
 
   override disable() {
