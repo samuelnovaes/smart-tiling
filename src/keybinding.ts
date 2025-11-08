@@ -17,7 +17,7 @@ export default class Keybindings {
         key,
         this.settings,
         Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
-        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+        Shell.ActionMode.NORMAL,
         handler
       );
       this.bingings.add(key);
