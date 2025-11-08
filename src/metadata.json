@@ -1,0 +1,8 @@
+{
+  "name": "Smart Tiling",
+  "description": "This GNOME extension brings Windows 10–style window tiling to your desktop. It allows you to quickly snap and organize windows using familiar keyboard shortcuts — Super + Arrow Keys. Press Super + Left/Right to move windows to either half of the screen, or combine with Up/Down to tile them into corners. A simple, efficient way to boost your workflow and window management on GNOME.",
+  "uuid": "smarttiling@samuelnovaes",
+  "shell-version": [
+    "49"
+  ]
+}
