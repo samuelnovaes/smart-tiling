@@ -25,8 +25,8 @@ export default class SmartTilingExtension extends Extension {
     this.keybindings = new Keybindings(this.getSettings());
     this.keybindings.add(Keys.MOVE_WINDOW_RIGHT, this.handleMoveWindowRight);
     this.keybindings.add(Keys.MOVE_WINDOW_LEFT, this.handleMoveWindowLeft);
-    this.keybindings.add(Keys.MOVE_WINDOW_TOP, this.handleMoveWindowTop);
-    this.keybindings.add(Keys.MOVE_WINDOW_BOTTOM, this.handleMoveWindowBottom);
+    this.keybindings.add(Keys.MOVE_WINDOW_UP, this.handleMoveWindowTop);
+    this.keybindings.add(Keys.MOVE_WINDOW_DOWN, this.handleMoveWindowBottom);
   }
 
   override disable() {

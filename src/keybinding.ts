@@ -6,8 +6,8 @@ import Shell from '@girs/shell-17';
 export enum Keys {
   MOVE_WINDOW_RIGHT = 'move-window-right',
   MOVE_WINDOW_LEFT = 'move-window-left',
-  MOVE_WINDOW_TOP = 'move-window-top',
-  MOVE_WINDOW_BOTTOM = 'move-window-bottom'
+  MOVE_WINDOW_UP = 'move-window-up',
+  MOVE_WINDOW_DOWN = 'move-window-down'
 }
 
 export class Keybindings {
