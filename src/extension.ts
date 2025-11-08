@@ -1,71 +1,107 @@
 import '@girs/gnome-shell/extensions/global';
+import Gio from '@girs/gio-2.0';
 import { Extension } from '@girs/gnome-shell/extensions/extension';
-import Meta from '@girs/meta-17';
 import Keybindings from './keybinding';
+import { Position, Tile } from './tile';
 
 export default class SmartTilingExtension extends Extension {
   private keybindings?: Keybindings;
+  private gnomeKeybindingsSettings?: Gio.Settings;
+  private mutterKeybindingsSettings?: Gio.Settings;
 
-  getWindow() {
-    return global.display.get_focus_window();
+  private moveWindowRight() {
+    const tile = new Tile();
+    if(tile.position === Position.TOP_LEFT) {
+      return tile.move(Position.TOP_RIGHT);
+    }
+    if(tile.position === Position.BOTTOM_LEFT) {
+      return tile.move(Position.BOTTOM_RIGHT);
+    }
+    if(tile.position === Position.TOP) {
+      return tile.move(Position.TOP_RIGHT);
+    }
+    if(tile.position === Position.BOTTOM) {
+      return tile.move(Position.BOTTOM_RIGHT);
+    }
+    return tile.move(Position.RIGHT);
   }
 
-  getMonitor(window: Meta.Window) {
-    const monitorIndex = window.get_monitor();
-    return global.display.get_monitor_geometry(monitorIndex);
+  private moveWindowLeft() {
+    const tile = new Tile();
+    if(tile.position === Position.TOP_RIGHT) {
+      return tile.move(Position.TOP_LEFT);
+    }
+    if(tile.position === Position.BOTTOM_RIGHT) {
+      return tile.move(Position.BOTTOM_LEFT);
+    }
+    if(tile.position === Position.TOP) {
+      return tile.move(Position.TOP_LEFT);
+    }
+    if(tile.position === Position.BOTTOM) {
+      return tile.move(Position.BOTTOM_LEFT);
+    }
+    return tile.move(Position.LEFT);
   }
 
-  handleMoveWindowLeft() {
-    const window = this.getWindow();
-    const monitor = this.getMonitor(window);
-    window.move_resize_frame(
-      true,
-      monitor.x,
-      monitor.y,
-      Math.floor(monitor.width / 2),
-      monitor.height
-    );
+  private moveWindowUp() {
+    const tile = new Tile();
+    if(tile.position === Position.BOTTOM_LEFT) {
+      return tile.move(Position.TOP_LEFT);
+    }
+    if(tile.position === Position.BOTTOM_RIGHT) {
+      return tile.move(Position.TOP_RIGHT);
+    }
+    if(tile.position === Position.LEFT) {
+      return tile.move(Position.TOP_LEFT);
+    }
+    if(tile.position === Position.RIGHT) {
+      return tile.move(Position.TOP_RIGHT);
+    }
+    if(tile.position === Position.TOP) {
+      return tile.move(Position.MAXIMIZED);
+    }
+    return tile.move(Position.TOP);
   }
 
-  handleMoveWindowRight() {
-    const window = this.getWindow();
-    const monitor = this.getMonitor(window);
-    window.move_resize_frame(
-      true,
-      monitor.x + Math.floor(monitor.width / 2),
-      monitor.y,
-      Math.floor(monitor.width / 2),
-      monitor.height
-    );
-  }
-  
-  handleMoveWindowUp() {
-    console.log('AAA');
-  }
-
-  handleMoveWindowDown() {
-    console.log('BBB');
+  private moveWindowDown() {
+    const tile = new Tile();
+    if(tile.position === Position.TOP_LEFT) {
+      return tile.move(Position.BOTTOM_LEFT);
+    }
+    if(tile.position === Position.TOP_RIGHT) {
+      return tile.move(Position.BOTTOM_RIGHT);
+    }
+    if(tile.position === Position.LEFT) {
+      return tile.move(Position.BOTTOM_LEFT);
+    }
+    if(tile.position === Position.RIGHT) {
+      return tile.move(Position.BOTTOM_RIGHT);
+    }
+    return tile.move(Position.BOTTOM);
   }
 
   override enable() {
-    const keybindingsSettings = this.getSettings();
-    const gnomeKeybindingsSettings = this.getSettings('org.gnome.desktop.wm.keybindings');
-    const mutterKeybindingsSettings = this.getSettings('org.gnome.mutter.keybindings');
+    this.gnomeKeybindingsSettings = this.getSettings('org.gnome.desktop.wm.keybindings');
+    this.mutterKeybindingsSettings = this.getSettings('org.gnome.mutter.keybindings');
+    
+    this.gnomeKeybindingsSettings.set_strv('maximize', []);
+    this.gnomeKeybindingsSettings.set_strv('unmaximize', []);
+    this.mutterKeybindingsSettings.set_strv('toggle-tiled-left', []);
+    this.mutterKeybindingsSettings.set_strv('toggle-tiled-right', []);
+    
+    this.keybindings = new Keybindings(this.getSettings());
 
-    gnomeKeybindingsSettings.set_strv('maximize', []);
-    gnomeKeybindingsSettings.set_strv('unmaximize', []);
-    mutterKeybindingsSettings.set_strv('toggle-tiled-left', []);
-    mutterKeybindingsSettings.set_strv('toggle-tiled-right', []);
-    
-    this.keybindings = new Keybindings(keybindingsSettings);
-    
-    this.keybindings.add('move-window-right', this.handleMoveWindowRight.bind(this));
-    this.keybindings.add('move-window-left', this.handleMoveWindowLeft.bind(this));
-    this.keybindings.add('move-window-up', this.handleMoveWindowUp.bind(this));
-    this.keybindings.add('move-window-down', this.handleMoveWindowDown.bind(this));
+    this.keybindings.add('move-window-right', this.moveWindowRight);
+    this.keybindings.add('move-window-left', this.moveWindowLeft);
+    this.keybindings.add('move-window-up', this.moveWindowUp);
+    this.keybindings.add('move-window-down', this.moveWindowDown);
   }
 
   override disable() {
     this.keybindings?.destroy();
+    this.gnomeKeybindingsSettings?.reset('maximize');
+    this.gnomeKeybindingsSettings?.reset('unmaximize');
+    this.mutterKeybindingsSettings?.reset('toggle-tiled-left');
+    this.mutterKeybindingsSettings?.reset('toggle-tiled-right');
   }
 }
