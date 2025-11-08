@@ -22,7 +22,7 @@ export class Keybindings {
     Main.wm.addKeybinding(
       key,
       this.settings,
-      Meta.KeyBindingFlags.NONE,
+      Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
       Shell.ActionMode.ALL,
       handler
     );
