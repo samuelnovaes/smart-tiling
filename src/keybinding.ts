@@ -19,19 +19,27 @@ export class Keybindings {
   }
 
   add(key: Keys, handler: () => void) {
-    Main.wm.addKeybinding(
-      key,
-      this.settings,
-      Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
-      Shell.ActionMode.ALL,
-      handler
-    );
-    this.bingings.add(key);
+    try {
+      Main.wm.addKeybinding(
+        key,
+        this.settings,
+        Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+        Shell.ActionMode.ALL,
+        handler
+      );
+      this.bingings.add(key);
+    } catch (error) {
+      console.error(`Failed to add keybinding for ${key}: ${error}`);
+    }
   }
 
   destroy() {
-    for(const key of this.bingings) {
-      Main.wm.removeKeybinding(key);
+    for (const key of this.bingings) {
+      try {
+        Main.wm.removeKeybinding(key);
+      } catch (error) {
+        console.error(`Failed to remove keybinding for ${key}: ${error}`);
+      }
     }
   }
 }
