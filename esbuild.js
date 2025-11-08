@@ -1,10 +1,13 @@
 import AdmZip from 'adm-zip';
 import { build } from 'esbuild';
-import { copyFileSync, readFileSync } from 'fs';
+import { cpSync, readFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 
 const __dirname = dirname(new URL(import.meta.url).pathname);
-const metadata = JSON.parse(readFileSync('./src/metadata.json', 'utf8'));
+const resourcePath = resolve(__dirname, 'resources');
+const distPath = resolve(__dirname, 'dist');
+const metadata = JSON.parse(readFileSync(resolve(resourcePath, 'metadata.json'), 'utf8'));
+const zipPath = resolve(__dirname, `${metadata.uuid}.zip`);
 
 await build({
   entryPoints: ['src/extension.ts'],
@@ -17,11 +20,8 @@ await build({
   external: ['gi://*', 'resource://*']
 });
 
-copyFileSync(
-  resolve(__dirname, 'src/metadata.json'),
-  resolve(__dirname, 'dist/metadata.json')
-);
+cpSync(resourcePath, distPath, { recursive: true });
 
 const zip = new AdmZip();
-zip.addLocalFolder(resolve(__dirname, 'dist'));
-zip.writeZip(resolve(__dirname, `${metadata.uuid}.zip`));
+zip.addLocalFolder(distPath);
+zip.writeZip(zipPath);
