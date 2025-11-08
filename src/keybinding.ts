@@ -3,14 +3,7 @@ import Gio from '@girs/gio-2.0';
 import Meta from '@girs/meta-17';
 import Shell from '@girs/shell-17';
 
-export enum Keys {
-  MOVE_WINDOW_RIGHT = 'move-window-right',
-  MOVE_WINDOW_LEFT = 'move-window-left',
-  MOVE_WINDOW_UP = 'move-window-up',
-  MOVE_WINDOW_DOWN = 'move-window-down'
-}
-
-export class Keybindings {
+export default class Keybindings {
   private bingings: Set<string> = new Set();
   private settings: Gio.Settings;
 
@@ -18,13 +11,13 @@ export class Keybindings {
     this.settings = settings;
   }
 
-  add(key: Keys, handler: () => void) {
+  add(key: string, handler: () => void) {
     try {
       Main.wm.addKeybinding(
         key,
         this.settings,
         Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
-        Shell.ActionMode.ALL,
+        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
         handler
       );
       this.bingings.add(key);
