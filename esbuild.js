@@ -2,6 +2,7 @@ import AdmZip from 'adm-zip';
 import { build } from 'esbuild';
 import { cpSync, readFileSync, rmSync } from 'fs';
 import { resolve, dirname } from 'path';
+import { execSync } from 'child_process';
 import os from 'os';
 
 const __dirname = dirname(new URL(import.meta.url).pathname);
@@ -24,6 +25,7 @@ await build({
 });
 
 cpSync(resourcePath, distPath, { recursive: true });
+execSync(`glib-compile-schemas ${distPath}/schemas`);
 
 const zip = new AdmZip();
 zip.addLocalFolder(distPath);
