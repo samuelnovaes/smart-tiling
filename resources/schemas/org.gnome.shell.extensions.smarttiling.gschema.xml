@@ -5,19 +5,19 @@
     path="/org/gnome/shell/extensions/smarttiling/"
   >
     <key name="move-window-right" type="as">
-      <default><![CDATA[['<Control><Super>Right']]]></default>
+      <default><![CDATA[['<Super>Right']]]></default>
       <summary>Move focused window to the right</summary>
     </key>
     <key name="move-window-left" type="as">
-      <default><![CDATA[['<Control><Super>Left']]]></default>
+      <default><![CDATA[['<Super>Left']]]></default>
       <summary>Move focused window to the left</summary>
     </key>
     <key name="move-window-up" type="as">
-      <default><![CDATA[['<Control><Super>Up']]]></default>
+      <default><![CDATA[['<Super>Up']]]></default>
       <summary>Move focused window up</summary>
     </key>
     <key name="move-window-down" type="as">
-      <default><![CDATA[['<Control><Super>Down']]]></default>
+      <default><![CDATA[['<Super>Down']]]></default>
       <summary>Move focused window down</summary>
     </key>
   </schema>
