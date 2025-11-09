@@ -65,7 +65,9 @@ export class Tile {
     if (position === Position.MAXIMIZED) {
       return this.window.maximize();
     }
-    this.window.unmaximize();
+    if (this.position === Position.MAXIMIZED) {
+      this.window.unmaximize();
+    }
     if (position === Position.TOP) {
       return this.window.move_resize_frame(
         true,
