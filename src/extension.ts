@@ -23,12 +23,7 @@ export default class SmartTilingExtension extends Extension {
     if (tile.position === Position.BOTTOM) {
       return tile.move(Position.BOTTOM_RIGHT);
     }
-    if (tile.position === Position.LEFT) {
-      return tile.move(Position.CENTER);
-    }
-    if (tile.position === Position.CENTER || tile.position === Position.MAXIMIZED) {
-      return tile.move(Position.RIGHT);
-    }
+    return tile.move(Position.RIGHT);
   }
 
   private moveWindowLeft() {
@@ -45,12 +40,7 @@ export default class SmartTilingExtension extends Extension {
     if (tile.position === Position.BOTTOM) {
       return tile.move(Position.BOTTOM_LEFT);
     }
-    if (tile.position === Position.RIGHT) {
-      return tile.move(Position.CENTER);
-    }
-    if (tile.position === Position.CENTER || tile.position === Position.MAXIMIZED) {
-      return tile.move(Position.LEFT);
-    }
+    return tile.move(Position.LEFT);
   }
 
   private moveWindowUp() {
@@ -70,12 +60,7 @@ export default class SmartTilingExtension extends Extension {
     if (tile.position === Position.TOP) {
       return tile.move(Position.MAXIMIZED);
     }
-    if (tile.position === Position.BOTTOM) {
-      return tile.move(Position.CENTER);
-    }
-    if (tile.position === Position.CENTER || tile.position === Position.MAXIMIZED) {
-      return tile.move(Position.TOP);
-    }
+    return tile.move(Position.TOP);
   }
 
   private moveWindowDown() {
@@ -95,12 +80,7 @@ export default class SmartTilingExtension extends Extension {
     if (tile.position === Position.MAXIMIZED) {
       return tile.move(Position.TOP);
     }
-    if (tile.position === Position.TOP) {
-      return tile.move(Position.CENTER);
-    }
-    if (tile.position === Position.CENTER) {
-      return tile.move(Position.BOTTOM);
-    }
+    return tile.move(Position.BOTTOM);
   }
 
   override enable() {

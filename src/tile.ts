@@ -2,8 +2,6 @@ import * as Main from '@girs/gnome-shell/ui/main';
 import Meta from '@girs/meta-17';
 import Mtk from '@girs/mtk-17';
 
-const cache: Map<number, Mtk.Rectangle> = new Map();
-
 export enum Position {
   TOP = 'top',
   BOTTOM = 'bottom',
@@ -21,27 +19,14 @@ export class Tile {
   private window: Meta.Window;
   private bounds: Mtk.Rectangle;
   private screen: Mtk.Rectangle;
-  private id: number;
 
   constructor() {
     this.window = global.display.get_focus_window();
     this.bounds = this.window.get_frame_rect();
     const monitorIndex = this.window.get_monitor();
     this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
-    this.window.unmaximize();
-    this.id = this.window.get_id();
-    if (!cache.has(this.id)) {
-      cache.set(this.window.get_id(), this.bounds);
-      this.window.connect('unmanaged', () => { cache.delete(this.id); });
-      this.window.connect('position-changed', this.onChange.bind(this));
-      this.window.connect('size-changed', this.onChange.bind(this));
-    }
-  }
-
-  private onChange(window: Meta.Window) {
-    this.bounds = window.get_frame_rect();
-    if (this.position === Position.CENTER) {
-      cache.set(this.id, this.bounds);
+    if(this.window.is_maximized()) {
+      this.window.unmaximize();
     }
   }
 
@@ -169,19 +154,6 @@ export class Tile {
         this.screen.width / 2,
         this.screen.height / 2
       );
-    }
-
-    if (position === Position.CENTER) {
-      const cachedBounds = cache.get(this.id);
-      if (cachedBounds) {
-        return this.window.move_resize_frame(
-          true,
-          cachedBounds.x,
-          cachedBounds.y,
-          cachedBounds.width,
-          cachedBounds.height
-        );
-      }
     }
   }
 };
