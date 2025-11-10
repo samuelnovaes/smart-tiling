@@ -32,9 +32,7 @@ export class Tile {
     this.id = this.window.get_id();
     if (!cache.has(this.id)) {
       cache.set(this.window.get_id(), this.bounds);
-      this.window.connect('unmanaged', () => {
-        cache.delete(this.id);
-      });
+      this.window.connect('unmanaged', () => { cache.delete(this.id); });
       this.window.connect('position-changed', this.onChange.bind(this));
       this.window.connect('size-changed', this.onChange.bind(this));
     }
