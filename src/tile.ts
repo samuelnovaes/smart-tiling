@@ -66,7 +66,7 @@ export class Tile {
     return Position.CENTER;
   }
 
-  doMove(position: Position) {
+  private doMove(position: Position) {
     if (position === Position.MAXIMIZED) {
       return this.window.move_resize_frame(
         true,
