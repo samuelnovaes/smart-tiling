@@ -33,4 +33,6 @@ gnome-extensions install smarttiling@samuelnovaes.zip
 
 ### 4. Restart GNOME Shell session
 
+### 5. Enable the extension in the [GNOME Extensions App](https://flathub.org/en/apps/org.gnome.Extensions)
+
 ### 5. Enjoy!
