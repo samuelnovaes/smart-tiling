@@ -1,6 +1,6 @@
 import * as Main from '@girs/gnome-shell/ui/main';
-import Meta from '@girs/meta-17';
-import Mtk from '@girs/mtk-17';
+import Meta from 'gi://Meta';
+import Mtk from 'gi://Mtk';
 
 export enum Position {
   TOP = 'top',

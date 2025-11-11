@@ -1,6 +1,6 @@
 import '@girs/gnome-shell/extensions/global';
-import Gio from '@girs/gio-2.0';
 import { Extension } from '@girs/gnome-shell/extensions/extension';
+import Gio from 'gi://Gio';
 import Keybindings from './keybinding';
 import { Position, Tile } from './tile';
 

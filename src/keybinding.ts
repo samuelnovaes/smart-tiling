@@ -1,7 +1,7 @@
 import * as Main from '@girs/gnome-shell/ui/main';
-import Gio from '@girs/gio-2.0';
-import Meta from '@girs/meta-17';
-import Shell from '@girs/shell-17';
+import Gio from 'gi://Gio';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
 
 export default class Keybindings {
   private bingings: Set<string> = new Set();
