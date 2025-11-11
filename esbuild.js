@@ -16,7 +16,7 @@ await build({
   bundle: true,
   outdir: distPath,
   treeShaking: false,
-  target: 'firefox78',
+  target: 'ESNext',
   platform: 'node',
   format: 'esm',
   external: ['gi://*', 'resource://*']
