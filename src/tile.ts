@@ -26,9 +26,6 @@ export class Tile {
     this.bounds = this.window.get_frame_rect();
     const monitorIndex = this.window.get_monitor();
     this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
-    if (this.window.is_maximized()) {
-      this.window.unmaximize();
-    }
   }
 
   get position(): Position | null {
@@ -159,6 +156,7 @@ export class Tile {
   }
 
   move(position: Position) {
+    this.window.unmaximize();
     GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, () => {
       this.doMove(position);
       return GLib.SOURCE_REMOVE;
