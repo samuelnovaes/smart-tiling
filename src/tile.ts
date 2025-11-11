@@ -1,6 +1,7 @@
 import * as Main from '@girs/gnome-shell/ui/main';
 import Meta from 'gi://Meta';
 import Mtk from 'gi://Mtk';
+import GLib from 'gi://GLib';
 
 export enum Position {
   TOP = 'top',
@@ -25,7 +26,7 @@ export class Tile {
     this.bounds = this.window.get_frame_rect();
     const monitorIndex = this.window.get_monitor();
     this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
-    if(this.window.is_maximized()) {
+    if (this.window.is_maximized()) {
       this.window.unmaximize();
     }
   }
@@ -65,7 +66,7 @@ export class Tile {
     return Position.CENTER;
   }
 
-  move(position: Position) {
+  doMove(position: Position) {
     if (position === Position.MAXIMIZED) {
       return this.window.move_resize_frame(
         true,
@@ -155,5 +156,12 @@ export class Tile {
         this.screen.height / 2
       );
     }
+  }
+
+  move(position: Position) {
+    GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, () => {
+      this.doMove(position);
+      return GLib.SOURCE_REMOVE;
+    });
   }
 };
