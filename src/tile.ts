@@ -13,7 +13,7 @@ export default class Tile {
     this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
   }
 
-  get position(): Position | null {
+  get position(): Position {
     const bounds = this.window.get_frame_rect();
     const top = bounds.y <= this.screen.y;
     const bottom = (bounds.y + bounds.height) >= (this.screen.y + this.screen.height);
