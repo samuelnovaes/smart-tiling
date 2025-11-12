@@ -164,4 +164,4 @@ export class Tile {
     }
     return this.doMove(position);
   }
-};
+}
