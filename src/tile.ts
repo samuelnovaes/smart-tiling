@@ -6,6 +6,7 @@ import GLib from 'gi://GLib';
 export default class Tile {
   private window: Meta.Window;
   private screen: Mtk.Rectangle;
+  private timeouts: Set<number> = new Set();
 
   constructor() {
     this.window = global.display.get_focus_window();
@@ -144,11 +145,24 @@ export default class Tile {
   move(position: Position) {
     if (this.window.get_maximize_flags() > 0) {
       this.window.unmaximize();
-      return GLib.timeout_add(GLib.PRIORITY_DEFAULT, 20, () => {
+      const timeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 20, () => {
         this.doMove(position);
-        return this.position !== position;
+        if (this.position === position) {
+          this.timeouts.delete(timeoutId);
+          return GLib.SOURCE_REMOVE;
+        }
+        return GLib.SOURCE_CONTINUE;
       });
+      this.timeouts.add(timeoutId);
+      return;
     }
     return this.doMove(position);
+  }
+
+  destroy() {
+    for (const timeoutId of this.timeouts) {
+      GLib.source_remove(timeoutId);
+    }
+    this.timeouts.clear();
   }
 }
