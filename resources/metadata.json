@@ -5,7 +5,7 @@
   "shell-version": [
     "49"
   ],
-  "version": 2,
+  "version": 4,
   "settings-schema": "org.gnome.shell.extensions.smarttiling",
   "url": "https://github.com/samuelnovaes/smart-tiling"
 }
