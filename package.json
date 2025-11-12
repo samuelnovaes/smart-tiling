@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "build": "rm -rf ./dist && tsc && node build.js && eslint --fix ./dist"
+    "build": "rm -rf ./dist && tsc && eslint --fix ./dist && node build.js"
   },
   "keywords": [],
   "author": "",
