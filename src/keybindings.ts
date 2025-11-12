@@ -4,7 +4,7 @@ import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
 export default class Keybindings {
-  private bingings: Set<string> = new Set();
+  private bindings: Set<string> = new Set();
   private settings: Gio.Settings;
 
   constructor(settings: Gio.Settings) {
@@ -20,14 +20,14 @@ export default class Keybindings {
         Shell.ActionMode.NORMAL,
         handler
       );
-      this.bingings.add(key);
+      this.bindings.add(key);
     } catch (error) {
       console.error(`Failed to add keybinding for ${key}: ${error}`);
     }
   }
 
   destroy() {
-    for (const key of this.bingings) {
+    for (const key of this.bindings) {
       try {
         Main.wm.removeKeybinding(key);
       } catch (error) {
