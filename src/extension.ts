@@ -7,79 +7,84 @@ export default class SmartTilingExtension extends Extension {
   private keybindings: Keybindings | null = null;
   private gnomeKeybindingsSettings: Gio.Settings | null = null;
   private mutterKeybindingsSettings: Gio.Settings | null = null;
+  private tile: Tile | null = null;
 
   private moveWindowRight() {
-    const tile = new Tile();
-    if (tile.position === Position.TOP_LEFT) {
-      return tile.move(Position.TOP);
+    if (this.tile?.position === Position.TOP_LEFT) {
+      return this.tile?.move(Position.TOP);
     }
-    if (tile.position === Position.TOP) {
-      return tile.move(Position.TOP_RIGHT);
+    if (this.tile?.position === Position.TOP) {
+      return this.tile?.move(Position.TOP_RIGHT);
     }
-    if (tile.position === Position.BOTTOM_LEFT) {
-      return tile.move(Position.BOTTOM);
+    if (this.tile?.position === Position.BOTTOM_LEFT) {
+      return this.tile?.move(Position.BOTTOM);
     }
-    if (tile.position === Position.BOTTOM) {
-      return tile.move(Position.BOTTOM_RIGHT);
+    if (this.tile?.position === Position.BOTTOM) {
+      return this.tile?.move(Position.BOTTOM_RIGHT);
     }
-    return tile.move(Position.RIGHT);
+    return this.tile?.move(Position.RIGHT);
   }
 
   private moveWindowLeft() {
-    const tile = new Tile();
-    if (tile.position === Position.TOP_RIGHT) {
-      return tile.move(Position.TOP);
+    if (this.tile?.position === Position.TOP_RIGHT) {
+      return this.tile?.move(Position.TOP);
     }
-    if (tile.position === Position.TOP) {
-      return tile.move(Position.TOP_LEFT);
+    if (this.tile?.position === Position.TOP) {
+      return this.tile?.move(Position.TOP_LEFT);
     }
-    if (tile.position === Position.BOTTOM_RIGHT) {
-      return tile.move(Position.BOTTOM);
+    if (this.tile?.position === Position.BOTTOM_RIGHT) {
+      return this.tile?.move(Position.BOTTOM);
     }
-    if (tile.position === Position.BOTTOM) {
-      return tile.move(Position.BOTTOM_LEFT);
+    if (this.tile?.position === Position.BOTTOM) {
+      return this.tile?.move(Position.BOTTOM_LEFT);
     }
-    return tile.move(Position.LEFT);
+    return this.tile?.move(Position.LEFT);
   }
 
   private moveWindowUp() {
-    const tile = new Tile();
-    if (tile.position === Position.BOTTOM_LEFT) {
-      return tile.move(Position.LEFT);
+    if (this.tile?.position === Position.BOTTOM_LEFT) {
+      return this.tile?.move(Position.LEFT);
     }
-    if (tile.position === Position.LEFT) {
-      return tile.move(Position.TOP_LEFT);
+    if (this.tile?.position === Position.LEFT) {
+      return this.tile?.move(Position.TOP_LEFT);
     }
-    if (tile.position === Position.BOTTOM_RIGHT) {
-      return tile.move(Position.RIGHT);
+    if (this.tile?.position === Position.BOTTOM_RIGHT) {
+      return this.tile?.move(Position.RIGHT);
     }
-    if (tile.position === Position.RIGHT) {
-      return tile.move(Position.TOP_RIGHT);
+    if (this.tile?.position === Position.RIGHT) {
+      return this.tile?.move(Position.TOP_RIGHT);
     }
-    if (tile.position === Position.TOP) {
-      return tile.move(Position.MAXIMIZED);
+    if (this.tile?.position === Position.TOP) {
+      return this.tile?.move(Position.MAXIMIZED);
     }
-    return tile.move(Position.TOP);
+    return this.tile?.move(Position.TOP);
   }
 
   private moveWindowDown() {
-    const tile = new Tile();
-    if (tile.position === Position.TOP_LEFT) {
-      return tile.move(Position.LEFT);
+    if (this.tile?.position === Position.TOP_LEFT) {
+      return this.tile?.move(Position.LEFT);
     }
-    if (tile.position === Position.LEFT) {
-      return tile.move(Position.BOTTOM_LEFT);
+    if (this.tile?.position === Position.LEFT) {
+      return this.tile?.move(Position.BOTTOM_LEFT);
     }
-    if (tile.position === Position.TOP_RIGHT) {
-      return tile.move(Position.RIGHT);
+    if (this.tile?.position === Position.TOP_RIGHT) {
+      return this.tile?.move(Position.RIGHT);
     }
-    if (tile.position === Position.RIGHT) {
-      return tile.move(Position.BOTTOM_RIGHT);
+    if (this.tile?.position === Position.RIGHT) {
+      return this.tile?.move(Position.BOTTOM_RIGHT);
     }
-    if (tile.position === Position.MAXIMIZED) {
-      return tile.move(Position.TOP);
+    if (this.tile?.position === Position.MAXIMIZED) {
+      return this.tile?.move(Position.TOP);
     }
-    return tile.move(Position.BOTTOM);
+    return this.tile?.move(Position.BOTTOM);
+  }
+
+  private handleMove(callback: () => void) {
+    return () => {
+      this.tile?.destroy();
+      this.tile = new Tile();
+      callback();
+    };
   }
 
   override enable() {
@@ -93,20 +98,25 @@ export default class SmartTilingExtension extends Extension {
 
     this.keybindings = new Keybindings(this.getSettings());
 
-    this.keybindings.add('move-window-right', this.moveWindowRight);
-    this.keybindings.add('move-window-left', this.moveWindowLeft);
-    this.keybindings.add('move-window-up', this.moveWindowUp);
-    this.keybindings.add('move-window-down', this.moveWindowDown);
+    this.keybindings.add('move-window-right', this.handleMove(this.moveWindowRight.bind(this)));
+    this.keybindings.add('move-window-left', this.handleMove(this.moveWindowLeft.bind(this)));
+    this.keybindings.add('move-window-up', this.handleMove(this.moveWindowUp.bind(this)));
+    this.keybindings.add('move-window-down', this.handleMove(this.moveWindowDown.bind(this)));
   }
 
   override disable() {
     this.keybindings?.destroy();
+    this.keybindings = null;
+
+    this.tile?.destroy();
+    this.tile = null;
+
     this.gnomeKeybindingsSettings?.reset('maximize');
     this.gnomeKeybindingsSettings?.reset('unmaximize');
+    this.gnomeKeybindingsSettings = null;
+
     this.mutterKeybindingsSettings?.reset('toggle-tiled-left');
     this.mutterKeybindingsSettings?.reset('toggle-tiled-right');
-    this.keybindings = null;
-    this.gnomeKeybindingsSettings = null;
     this.mutterKeybindingsSettings = null;
   }
 }
