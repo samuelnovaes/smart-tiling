@@ -1,4 +1,4 @@
-import * as Main from '@girs/gnome-shell/ui/main';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import Gio from 'gi://Gio';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
@@ -21,7 +21,8 @@ export default class Keybindings {
         handler
       );
       this.bindings.add(key);
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`Failed to add keybinding for ${key}: ${error}`);
     }
   }
@@ -30,7 +31,8 @@ export default class Keybindings {
     for (const key of this.bindings) {
       try {
         Main.wm.removeKeybinding(key);
-      } catch (error) {
+      }
+      catch (error) {
         console.error(`Failed to remove keybinding for ${key}: ${error}`);
       }
     }

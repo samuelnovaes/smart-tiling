@@ -1,15 +1,15 @@
 {
-  "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "./dist",
     "sourceMap": false,
     "strict": true,
     "skipLibCheck": true,
-    "target": "esnext",
+    "target": "es2023",
+    "removeComments": true,
     "lib": [
-      "esnext",
+      "ES2023",
       "DOM"
     ]
   },

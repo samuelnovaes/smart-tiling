@@ -1,22 +1,9 @@
-import * as Main from '@girs/gnome-shell/ui/main';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import Meta from 'gi://Meta';
 import Mtk from 'gi://Mtk';
 import GLib from 'gi://GLib';
 
-export enum Position {
-  TOP = 'top',
-  BOTTOM = 'bottom',
-  LEFT = 'left',
-  RIGHT = 'right',
-  TOP_LEFT = 'top-left',
-  TOP_RIGHT = 'top-right',
-  BOTTOM_LEFT = 'bottom-left',
-  BOTTOM_RIGHT = 'bottom-right',
-  MAXIMIZED = 'maximized',
-  CENTER = 'center'
-}
-
-export class Tile {
+export default class Tile {
   private window: Meta.Window;
   private screen: Mtk.Rectangle;
 

@@ -1,8 +1,7 @@
-import '@girs/gnome-shell/extensions/global';
-import { Extension } from '@girs/gnome-shell/extensions/extension';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import Gio from 'gi://Gio';
-import Keybindings from './keybindings';
-import { Position, Tile } from './tile';
+import Keybindings from './keybindings.js';
+import Tile from './tile.js';
 
 export default class SmartTilingExtension extends Extension {
   private keybindings: Keybindings | null = null;
