@@ -156,10 +156,17 @@ export class Tile {
   }
 
   move(position: Position) {
-    this.window.unmaximize();
-    GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, () => {
-      this.doMove(position);
-      return GLib.SOURCE_REMOVE;
-    });
+    if (this.window.get_maximize_flags() > 0) {
+      this.window.unmaximize();
+      return GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, () => {
+        this.bounds = this.window.get_frame_rect();
+        if (this.position === position) {
+          return GLib.SOURCE_REMOVE;
+        }
+        this.doMove(position);
+        return GLib.SOURCE_CONTINUE;
+      });
+    }
+    return this.doMove(position);
   }
 };
