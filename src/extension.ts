@@ -1,7 +1,7 @@
 import '@girs/gnome-shell/extensions/global';
 import { Extension } from '@girs/gnome-shell/extensions/extension';
 import Gio from 'gi://Gio';
-import Keybindings from './keybinding';
+import Keybindings from './keybindings';
 import { Position, Tile } from './tile';
 
 export default class SmartTilingExtension extends Extension {
