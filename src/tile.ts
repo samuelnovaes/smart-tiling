@@ -18,21 +18,20 @@ export enum Position {
 
 export class Tile {
   private window: Meta.Window;
-  private bounds: Mtk.Rectangle;
   private screen: Mtk.Rectangle;
 
   constructor() {
     this.window = global.display.get_focus_window();
-    this.bounds = this.window.get_frame_rect();
     const monitorIndex = this.window.get_monitor();
     this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
   }
 
   get position(): Position | null {
-    const top = this.bounds.y <= this.screen.y;
-    const bottom = (this.bounds.y + this.bounds.height) >= (this.screen.y + this.screen.height);
-    const left = this.bounds.x <= this.screen.x;
-    const right = (this.bounds.x + this.bounds.width) >= (this.screen.x + this.screen.width);
+    const bounds = this.window.get_frame_rect();
+    const top = bounds.y <= this.screen.y;
+    const bottom = (bounds.y + bounds.height) >= (this.screen.y + this.screen.height);
+    const left = bounds.x <= this.screen.x;
+    const right = (bounds.x + bounds.width) >= (this.screen.x + this.screen.width);
     if (top && !bottom && left && right) {
       return Position.TOP;
     }
@@ -159,12 +158,8 @@ export class Tile {
     if (this.window.get_maximize_flags() > 0) {
       this.window.unmaximize();
       return GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, () => {
-        this.bounds = this.window.get_frame_rect();
-        if (this.position === position) {
-          return GLib.SOURCE_REMOVE;
-        }
         this.doMove(position);
-        return GLib.SOURCE_CONTINUE;
+        return this.position === position;
       });
     }
     return this.doMove(position);
