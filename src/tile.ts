@@ -157,7 +157,7 @@ export class Tile {
   move(position: Position) {
     if (this.window.get_maximize_flags() > 0) {
       this.window.unmaximize();
-      return GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, () => {
+      return GLib.timeout_add(GLib.PRIORITY_DEFAULT, 20, () => {
         this.doMove(position);
         return this.position !== position;
       });
