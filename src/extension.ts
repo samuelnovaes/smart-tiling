@@ -5,9 +5,9 @@ import Keybindings from './keybindings';
 import { Position, Tile } from './tile';
 
 export default class SmartTilingExtension extends Extension {
-  private keybindings?: Keybindings;
-  private gnomeKeybindingsSettings?: Gio.Settings;
-  private mutterKeybindingsSettings?: Gio.Settings;
+  private keybindings: Keybindings | null = null;
+  private gnomeKeybindingsSettings: Gio.Settings | null = null;
+  private mutterKeybindingsSettings: Gio.Settings | null = null;
 
   private moveWindowRight() {
     const tile = new Tile();
@@ -106,5 +106,8 @@ export default class SmartTilingExtension extends Extension {
     this.gnomeKeybindingsSettings?.reset('unmaximize');
     this.mutterKeybindingsSettings?.reset('toggle-tiled-left');
     this.mutterKeybindingsSettings?.reset('toggle-tiled-right');
+    this.keybindings = null;
+    this.gnomeKeybindingsSettings = null;
+    this.mutterKeybindingsSettings = null;
   }
 }
