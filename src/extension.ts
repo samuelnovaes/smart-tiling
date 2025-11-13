@@ -106,17 +106,14 @@ export default class SmartTilingExtension extends Extension {
 
   override disable() {
     this.keybindings?.destroy();
-    this.keybindings = null;
-
     this.tile?.destroy();
-    this.tile = null;
-
     this.gnomeKeybindingsSettings?.reset('maximize');
     this.gnomeKeybindingsSettings?.reset('unmaximize');
-    this.gnomeKeybindingsSettings = null;
-
     this.mutterKeybindingsSettings?.reset('toggle-tiled-left');
     this.mutterKeybindingsSettings?.reset('toggle-tiled-right');
+    this.tile = null;
+    this.keybindings = null;
+    this.gnomeKeybindingsSettings = null;
     this.mutterKeybindingsSettings = null;
   }
 }
