@@ -5,6 +5,7 @@ import Tile from './tile.js';
 
 export default class SmartTilingExtension extends Extension {
   private keybindings: Keybindings | null = null;
+  private settings: Gio.Settings | null = null;
   private gnomeKeybindingsSettings: Gio.Settings | null = null;
   private mutterKeybindingsSettings: Gio.Settings | null = null;
   private tile: Tile | null = null;
@@ -82,7 +83,7 @@ export default class SmartTilingExtension extends Extension {
   private handleMove(callback: () => void) {
     return () => {
       this.tile?.destroy();
-      this.tile = new Tile();
+      this.tile = new Tile(this.settings!);
       callback();
     };
   }
@@ -90,13 +91,14 @@ export default class SmartTilingExtension extends Extension {
   override enable() {
     this.gnomeKeybindingsSettings = this.getSettings('org.gnome.desktop.wm.keybindings');
     this.mutterKeybindingsSettings = this.getSettings('org.gnome.mutter.keybindings');
+    this.settings = this.getSettings();
 
     this.gnomeKeybindingsSettings.set_strv('maximize', []);
     this.gnomeKeybindingsSettings.set_strv('unmaximize', []);
     this.mutterKeybindingsSettings.set_strv('toggle-tiled-left', []);
     this.mutterKeybindingsSettings.set_strv('toggle-tiled-right', []);
 
-    this.keybindings = new Keybindings(this.getSettings());
+    this.keybindings = new Keybindings(this.settings);
 
     this.keybindings.add('move-window-right', this.handleMove(this.moveWindowRight.bind(this)));
     this.keybindings.add('move-window-left', this.handleMove(this.moveWindowLeft.bind(this)));
@@ -115,5 +117,6 @@ export default class SmartTilingExtension extends Extension {
     this.keybindings = null;
     this.gnomeKeybindingsSettings = null;
     this.mutterKeybindingsSettings = null;
+    this.settings = null;
   }
 }
