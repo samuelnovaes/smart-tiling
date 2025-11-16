@@ -20,5 +20,9 @@
       <default><![CDATA[['<Super>Down']]]></default>
       <summary>Move focused window down</summary>
     </key>
+    <key name="gap-size" type="i">
+      <default>8</default>
+      <summary>Size of the gaps between windows (in pixels)</summary>
+    </key>
   </schema>
 </schemalist>
