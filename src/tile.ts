@@ -2,16 +2,23 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import Meta from 'gi://Meta';
 import Mtk from 'gi://Mtk';
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 
 export default class Tile {
   private window: Meta.Window;
   private screen: Mtk.Rectangle;
   private timeouts: Set<number> = new Set();
+  private gapSize: number;
 
-  constructor() {
+  constructor(settings: Gio.Settings) {
     this.window = global.display.get_focus_window();
     const monitorIndex = this.window.get_monitor();
     this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
+    this.gapSize = settings.get_int('gap-size');
+    this.screen.x += this.gapSize;
+    this.screen.y += this.gapSize;
+    this.screen.width -= this.gapSize * 2;
+    this.screen.height -= this.gapSize * 2;
   }
 
   get position() {
@@ -51,6 +58,8 @@ export default class Tile {
   }
 
   private doMove(position: Position) {
+    const halfGap = this.gapSize / 2;
+
     if (position === Position.MAXIMIZED) {
       return this.window.move_resize_frame(
         true,
@@ -67,7 +76,7 @@ export default class Tile {
         this.screen.x,
         this.screen.y,
         this.screen.width,
-        this.screen.height / 2
+        this.screen.height / 2 - halfGap
       );
     }
 
@@ -75,9 +84,9 @@ export default class Tile {
       return this.window.move_resize_frame(
         true,
         this.screen.x,
-        this.screen.y + (this.screen.height / 2),
+        this.screen.y + (this.screen.height / 2) + halfGap,
         this.screen.width,
-        this.screen.height / 2
+        this.screen.height / 2 - halfGap
       );
     }
 
@@ -86,7 +95,7 @@ export default class Tile {
         true,
         this.screen.x,
         this.screen.y,
-        this.screen.width / 2,
+        this.screen.width / 2 - halfGap,
         this.screen.height
       );
     }
@@ -94,9 +103,9 @@ export default class Tile {
     if (position === Position.RIGHT) {
       return this.window.move_resize_frame(
         true,
-        this.screen.x + (this.screen.width / 2),
+        this.screen.x + (this.screen.width / 2) + halfGap,
         this.screen.y,
-        this.screen.width / 2,
+        this.screen.width / 2 - halfGap,
         this.screen.height
       );
     }
@@ -106,18 +115,18 @@ export default class Tile {
         true,
         this.screen.x,
         this.screen.y,
-        this.screen.width / 2,
-        this.screen.height / 2
+        this.screen.width / 2 - halfGap,
+        this.screen.height / 2 - halfGap
       );
     }
 
     if (position === Position.TOP_RIGHT) {
       return this.window.move_resize_frame(
         true,
-        this.screen.x + (this.screen.width / 2),
+        this.screen.x + (this.screen.width / 2) + halfGap,
         this.screen.y,
-        this.screen.width / 2,
-        this.screen.height / 2
+        this.screen.width / 2 - halfGap,
+        this.screen.height / 2 - halfGap
       );
     }
 
@@ -125,19 +134,19 @@ export default class Tile {
       return this.window.move_resize_frame(
         true,
         this.screen.x,
-        this.screen.y + (this.screen.height / 2),
-        this.screen.width / 2,
-        this.screen.height / 2
+        this.screen.y + (this.screen.height / 2) + halfGap,
+        this.screen.width / 2 - halfGap,
+        this.screen.height / 2 - halfGap
       );
     }
 
     if (position === Position.BOTTOM_RIGHT) {
       return this.window.move_resize_frame(
         true,
-        this.screen.x + this.screen.width / 2,
-        this.screen.y + this.screen.height / 2,
-        this.screen.width / 2,
-        this.screen.height / 2
+        this.screen.x + this.screen.width / 2 + halfGap,
+        this.screen.y + this.screen.height / 2 + halfGap,
+        this.screen.width / 2 - halfGap,
+        this.screen.height / 2 - halfGap
       );
     }
   }
