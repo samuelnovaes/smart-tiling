@@ -24,7 +24,7 @@ export default class SmartTilingPreferences extends ExtensionPreferences {
       subtitle: _('Set the size of the gaps between tiled windows.'),
       adjustment: new Gtk.Adjustment({
         lower: 0,
-        upper: 100,
+        upper: Number.MAX_SAFE_INTEGER,
         step_increment: 1
       })
     });
