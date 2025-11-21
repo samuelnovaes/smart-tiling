@@ -10,8 +10,8 @@ export default class Tile {
   private timeouts: Set<number> = new Set();
   private gapSize: number;
 
-  constructor(settings: Gio.Settings) {
-    this.window = global.display.get_focus_window();
+  constructor(window: Meta.Window, settings: Gio.Settings) {
+    this.window = window;
     const monitorIndex = this.window.get_monitor();
     this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
     this.gapSize = settings.get_int('gap-size');
