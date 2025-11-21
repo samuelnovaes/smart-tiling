@@ -43,5 +43,6 @@ export default class TileManager {
     for (const tile of this.tiles) {
       tile.destroy();
     }
+    this.tiles = [];
   }
 };
