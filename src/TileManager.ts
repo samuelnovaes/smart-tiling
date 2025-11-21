@@ -17,7 +17,7 @@ export default class TileManager {
   }
 
   private createTileForWindow(window: Meta.Window) {
-    const tile = new Tile(window, this.settings);
+    const tile = new Tile(window);
     this.tiles.push(tile);
     window.connect('unmanaged', () => {
       tile.destroy();
@@ -32,7 +32,10 @@ export default class TileManager {
       return null;
     }
     const existingTile = this.tiles.find(t => t.window.get_id() === window.get_id());
-    return existingTile ?? this.createTileForWindow(window);
+    const tile = existingTile ?? this.createTileForWindow(window);
+    const gapSize = this.settings.get_int('gap-size');
+    tile.reloadScreen(gapSize);
+    return tile;
   }
 
   destroy() {
