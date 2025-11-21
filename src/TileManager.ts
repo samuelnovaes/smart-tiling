@@ -27,7 +27,7 @@ export default class TileManager {
     return tile;
   }
 
-  getCurrentTile() {
+  private getCurrentTile() {
     const window = global.display.get_focus_window();
     if (!window) {
       return null;
@@ -37,6 +37,84 @@ export default class TileManager {
     const gapSize = this.settings.get_int('gap-size');
     tile.reloadScreen(gapSize);
     return tile;
+  }
+
+  moveRight() {
+    const tile = this.getCurrentTile();
+    const position = tile?.getPosition();
+    if (position === Position.TOP_LEFT) {
+      return tile?.move(Position.TOP);
+    }
+    if (position === Position.TOP) {
+      return tile?.move(Position.TOP_RIGHT);
+    }
+    if (position === Position.BOTTOM_LEFT) {
+      return tile?.move(Position.BOTTOM);
+    }
+    if (position === Position.BOTTOM) {
+      return tile?.move(Position.BOTTOM_RIGHT);
+    }
+    return tile?.move(Position.RIGHT);
+  }
+
+  moveLeft() {
+    const tile = this.getCurrentTile();
+    const position = tile?.getPosition();
+    if (position === Position.TOP_RIGHT) {
+      return tile?.move(Position.TOP);
+    }
+    if (position === Position.TOP) {
+      return tile?.move(Position.TOP_LEFT);
+    }
+    if (position === Position.BOTTOM_RIGHT) {
+      return tile?.move(Position.BOTTOM);
+    }
+    if (position === Position.BOTTOM) {
+      return tile?.move(Position.BOTTOM_LEFT);
+    }
+    return tile?.move(Position.LEFT);
+  }
+
+  moveUp() {
+    const tile = this.getCurrentTile();
+    const position = tile?.getPosition();
+    if (position === Position.BOTTOM_LEFT) {
+      return tile?.move(Position.LEFT);
+    }
+    if (position === Position.LEFT) {
+      return tile?.move(Position.TOP_LEFT);
+    }
+    if (position === Position.BOTTOM_RIGHT) {
+      return tile?.move(Position.RIGHT);
+    }
+    if (position === Position.RIGHT) {
+      return tile?.move(Position.TOP_RIGHT);
+    }
+    if (position === Position.TOP) {
+      return tile?.move(Position.MAXIMIZED);
+    }
+    return tile?.move(Position.TOP);
+  }
+
+  moveDown() {
+    const tile = this.getCurrentTile();
+    const position = tile?.getPosition();
+    if (position === Position.TOP_LEFT) {
+      return tile?.move(Position.LEFT);
+    }
+    if (position === Position.LEFT) {
+      return tile?.move(Position.BOTTOM_LEFT);
+    }
+    if (position === Position.TOP_RIGHT) {
+      return tile?.move(Position.RIGHT);
+    }
+    if (position === Position.RIGHT) {
+      return tile?.move(Position.BOTTOM_RIGHT);
+    }
+    if (position === Position.MAXIMIZED) {
+      return tile?.move(Position.TOP);
+    }
+    return tile?.move(Position.BOTTOM);
   }
 
   destroy() {
