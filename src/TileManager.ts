@@ -3,7 +3,7 @@ import Meta from 'gi://Meta';
 import Gio from 'gi://Gio';
 
 export default class TileManager {
-  private tiles: Tile[] = [];
+  private tiles: Map<number, Tile> = new Map();
   private settings: Gio.Settings;
   private windowCreatedSignal: number;
 
@@ -18,10 +18,11 @@ export default class TileManager {
 
   private createTileForWindow(window: Meta.Window) {
     const tile = new Tile(window);
-    this.tiles.push(tile);
+    const windowId = window.get_id();
+    this.tiles.set(windowId, tile);
     window.connect('unmanaged', () => {
       tile.destroy();
-      this.tiles = this.tiles.filter(t => t !== tile);
+      this.tiles.delete(windowId);
     });
     return tile;
   }
@@ -31,7 +32,7 @@ export default class TileManager {
     if (!window) {
       return null;
     }
-    const existingTile = this.tiles.find(t => t.window.get_id() === window.get_id());
+    const existingTile = this.tiles.get(window.get_id());
     const tile = existingTile ?? this.createTileForWindow(window);
     const gapSize = this.settings.get_int('gap-size');
     tile.reloadScreen(gapSize);
@@ -40,9 +41,9 @@ export default class TileManager {
 
   destroy() {
     global.display.disconnect(this.windowCreatedSignal);
-    for (const tile of this.tiles) {
+    for (const tile of this.tiles.values()) {
       tile.destroy();
     }
-    this.tiles = [];
+    this.tiles.clear();
   }
 };
