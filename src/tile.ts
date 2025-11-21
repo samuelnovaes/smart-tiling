@@ -5,7 +5,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
 export default class Tile {
-  private window: Meta.Window;
+  window: Meta.Window;
   private screen: Mtk.Rectangle;
   private timeouts: Set<number> = new Set();
   private gapSize: number;
