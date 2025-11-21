@@ -12,74 +12,78 @@ export default class SmartTilingExtension extends Extension {
 
   private moveWindowRight() {
     const tile = this.tileManager?.getCurrentTile();
-    if (tile?.position === Position.TOP_LEFT) {
-      return tile.move(Position.TOP);
+    const position = tile?.getPosition();
+    if (position === Position.TOP_LEFT) {
+      return tile?.move(Position.TOP);
     }
-    if (tile?.position === Position.TOP) {
-      return tile.move(Position.TOP_RIGHT);
+    if (position === Position.TOP) {
+      return tile?.move(Position.TOP_RIGHT);
     }
-    if (tile?.position === Position.BOTTOM_LEFT) {
-      return tile.move(Position.BOTTOM);
+    if (position === Position.BOTTOM_LEFT) {
+      return tile?.move(Position.BOTTOM);
     }
-    if (tile?.position === Position.BOTTOM) {
-      return tile.move(Position.BOTTOM_RIGHT);
+    if (position === Position.BOTTOM) {
+      return tile?.move(Position.BOTTOM_RIGHT);
     }
     return tile?.move(Position.RIGHT);
   }
 
   private moveWindowLeft() {
     const tile = this.tileManager?.getCurrentTile();
-    if (tile?.position === Position.TOP_RIGHT) {
-      return tile.move(Position.TOP);
+    const position = tile?.getPosition();
+    if (position === Position.TOP_RIGHT) {
+      return tile?.move(Position.TOP);
     }
-    if (tile?.position === Position.TOP) {
-      return tile.move(Position.TOP_LEFT);
+    if (position === Position.TOP) {
+      return tile?.move(Position.TOP_LEFT);
     }
-    if (tile?.position === Position.BOTTOM_RIGHT) {
-      return tile.move(Position.BOTTOM);
+    if (position === Position.BOTTOM_RIGHT) {
+      return tile?.move(Position.BOTTOM);
     }
-    if (tile?.position === Position.BOTTOM) {
-      return tile.move(Position.BOTTOM_LEFT);
+    if (position === Position.BOTTOM) {
+      return tile?.move(Position.BOTTOM_LEFT);
     }
     return tile?.move(Position.LEFT);
   }
 
   private moveWindowUp() {
     const tile = this.tileManager?.getCurrentTile();
-    if (tile?.position === Position.BOTTOM_LEFT) {
-      return tile.move(Position.LEFT);
+    const position = tile?.getPosition();
+    if (position === Position.BOTTOM_LEFT) {
+      return tile?.move(Position.LEFT);
     }
-    if (tile?.position === Position.LEFT) {
-      return tile.move(Position.TOP_LEFT);
+    if (position === Position.LEFT) {
+      return tile?.move(Position.TOP_LEFT);
     }
-    if (tile?.position === Position.BOTTOM_RIGHT) {
-      return tile.move(Position.RIGHT);
+    if (position === Position.BOTTOM_RIGHT) {
+      return tile?.move(Position.RIGHT);
     }
-    if (tile?.position === Position.RIGHT) {
-      return tile.move(Position.TOP_RIGHT);
+    if (position === Position.RIGHT) {
+      return tile?.move(Position.TOP_RIGHT);
     }
-    if (tile?.position === Position.TOP) {
-      return tile.move(Position.MAXIMIZED);
+    if (position === Position.TOP) {
+      return tile?.move(Position.MAXIMIZED);
     }
     return tile?.move(Position.TOP);
   }
 
   private moveWindowDown() {
     const tile = this.tileManager?.getCurrentTile();
-    if (tile?.position === Position.TOP_LEFT) {
-      return tile.move(Position.LEFT);
+    const position = tile?.getPosition();
+    if (position === Position.TOP_LEFT) {
+      return tile?.move(Position.LEFT);
     }
-    if (tile?.position === Position.LEFT) {
-      return tile.move(Position.BOTTOM_LEFT);
+    if (position === Position.LEFT) {
+      return tile?.move(Position.BOTTOM_LEFT);
     }
-    if (tile?.position === Position.TOP_RIGHT) {
-      return tile.move(Position.RIGHT);
+    if (position === Position.TOP_RIGHT) {
+      return tile?.move(Position.RIGHT);
     }
-    if (tile?.position === Position.RIGHT) {
-      return tile.move(Position.BOTTOM_RIGHT);
+    if (position === Position.RIGHT) {
+      return tile?.move(Position.BOTTOM_RIGHT);
     }
-    if (tile?.position === Position.MAXIMIZED) {
-      return tile.move(Position.TOP);
+    if (position === Position.MAXIMIZED) {
+      return tile?.move(Position.TOP);
     }
     return tile?.move(Position.BOTTOM);
   }
