@@ -2,26 +2,18 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import Meta from 'gi://Meta';
 import Mtk from 'gi://Mtk';
 import GLib from 'gi://GLib';
-import Gio from 'gi://Gio';
 
 export default class Tile {
   window: Meta.Window;
-  private screen: Mtk.Rectangle;
+  private screen: Mtk.Rectangle = new Mtk.Rectangle();
   private timeouts: Set<number> = new Set();
-  private gapSize: number;
+  private gapSize: number = 0;
 
-  constructor(window: Meta.Window, settings: Gio.Settings) {
+  constructor(window: Meta.Window) {
     this.window = window;
-    const monitorIndex = this.window.get_monitor();
-    this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
-    this.gapSize = settings.get_int('gap-size');
-    this.screen.x += this.gapSize;
-    this.screen.y += this.gapSize;
-    this.screen.width -= this.gapSize * 2;
-    this.screen.height -= this.gapSize * 2;
   }
 
-  get position() {
+  getPosition() {
     const bounds = this.window.get_frame_rect();
     const top = bounds.y <= this.screen.y;
     const bottom = (bounds.y + bounds.height) >= (this.screen.y + this.screen.height);
@@ -156,7 +148,7 @@ export default class Tile {
       this.window.unmaximize();
       const timeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 20, () => {
         this.doMove(position);
-        if (this.position === position) {
+        if (this.getPosition() === position) {
           this.timeouts.delete(timeoutId);
           return GLib.SOURCE_REMOVE;
         }
@@ -166,6 +158,16 @@ export default class Tile {
       return;
     }
     return this.doMove(position);
+  }
+
+  reloadScreen(gapSize: number) {
+    const monitorIndex = this.window.get_monitor();
+    this.gapSize = gapSize;
+    this.screen = Main.layoutManager.getWorkAreaForMonitor(monitorIndex);
+    this.screen.x += gapSize;
+    this.screen.y += gapSize;
+    this.screen.width -= gapSize * 2;
+    this.screen.height -= gapSize * 2;
   }
 
   destroy() {
