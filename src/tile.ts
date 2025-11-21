@@ -4,7 +4,7 @@ import Mtk from 'gi://Mtk';
 import GLib from 'gi://GLib';
 
 export default class Tile {
-  window: Meta.Window;
+  private window: Meta.Window;
   private screen: Mtk.Rectangle = new Mtk.Rectangle();
   private timeouts: Set<number> = new Set();
   private gapSize: number = 0;
