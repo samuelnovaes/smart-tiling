@@ -10,101 +10,20 @@ export default class SmartTilingExtension extends Extension {
   private mutterKeybindingsSettings: Gio.Settings | null = null;
   private tileManager: TileManager | null = null;
 
-  private moveWindowRight() {
-    const tile = this.tileManager?.getCurrentTile();
-    const position = tile?.getPosition();
-    if (position === Position.TOP_LEFT) {
-      return tile?.move(Position.TOP);
-    }
-    if (position === Position.TOP) {
-      return tile?.move(Position.TOP_RIGHT);
-    }
-    if (position === Position.BOTTOM_LEFT) {
-      return tile?.move(Position.BOTTOM);
-    }
-    if (position === Position.BOTTOM) {
-      return tile?.move(Position.BOTTOM_RIGHT);
-    }
-    return tile?.move(Position.RIGHT);
-  }
-
-  private moveWindowLeft() {
-    const tile = this.tileManager?.getCurrentTile();
-    const position = tile?.getPosition();
-    if (position === Position.TOP_RIGHT) {
-      return tile?.move(Position.TOP);
-    }
-    if (position === Position.TOP) {
-      return tile?.move(Position.TOP_LEFT);
-    }
-    if (position === Position.BOTTOM_RIGHT) {
-      return tile?.move(Position.BOTTOM);
-    }
-    if (position === Position.BOTTOM) {
-      return tile?.move(Position.BOTTOM_LEFT);
-    }
-    return tile?.move(Position.LEFT);
-  }
-
-  private moveWindowUp() {
-    const tile = this.tileManager?.getCurrentTile();
-    const position = tile?.getPosition();
-    if (position === Position.BOTTOM_LEFT) {
-      return tile?.move(Position.LEFT);
-    }
-    if (position === Position.LEFT) {
-      return tile?.move(Position.TOP_LEFT);
-    }
-    if (position === Position.BOTTOM_RIGHT) {
-      return tile?.move(Position.RIGHT);
-    }
-    if (position === Position.RIGHT) {
-      return tile?.move(Position.TOP_RIGHT);
-    }
-    if (position === Position.TOP) {
-      return tile?.move(Position.MAXIMIZED);
-    }
-    return tile?.move(Position.TOP);
-  }
-
-  private moveWindowDown() {
-    const tile = this.tileManager?.getCurrentTile();
-    const position = tile?.getPosition();
-    if (position === Position.TOP_LEFT) {
-      return tile?.move(Position.LEFT);
-    }
-    if (position === Position.LEFT) {
-      return tile?.move(Position.BOTTOM_LEFT);
-    }
-    if (position === Position.TOP_RIGHT) {
-      return tile?.move(Position.RIGHT);
-    }
-    if (position === Position.RIGHT) {
-      return tile?.move(Position.BOTTOM_RIGHT);
-    }
-    if (position === Position.MAXIMIZED) {
-      return tile?.move(Position.TOP);
-    }
-    return tile?.move(Position.BOTTOM);
-  }
-
   override enable() {
     this.gnomeKeybindingsSettings = this.getSettings('org.gnome.desktop.wm.keybindings');
     this.mutterKeybindingsSettings = this.getSettings('org.gnome.mutter.keybindings');
     this.settings = this.getSettings();
     this.tileManager = new TileManager(this.settings);
-
     this.gnomeKeybindingsSettings.set_strv('maximize', []);
     this.gnomeKeybindingsSettings.set_strv('unmaximize', []);
     this.mutterKeybindingsSettings.set_strv('toggle-tiled-left', []);
     this.mutterKeybindingsSettings.set_strv('toggle-tiled-right', []);
-
     this.keybindings = new Keybindings(this.settings);
-
-    this.keybindings.add('move-window-right', this.moveWindowRight.bind(this));
-    this.keybindings.add('move-window-left', this.moveWindowLeft.bind(this));
-    this.keybindings.add('move-window-up', this.moveWindowUp.bind(this));
-    this.keybindings.add('move-window-down', this.moveWindowDown.bind(this));
+    this.keybindings.add('move-window-right', this.tileManager.moveRight.bind(this.tileManager));
+    this.keybindings.add('move-window-left', this.tileManager.moveLeft.bind(this.tileManager));
+    this.keybindings.add('move-window-up', this.tileManager.moveUp.bind(this.tileManager));
+    this.keybindings.add('move-window-down', this.tileManager.moveDown.bind(this.tileManager));
   }
 
   override disable() {
