@@ -8,6 +8,7 @@ export default class Tile {
   private screen: Mtk.Rectangle = new Mtk.Rectangle();
   private timeouts: Set<number> = new Set();
   private gapSize: number = 0;
+  private signals: Set<number> = new Set();
 
   constructor(window: Meta.Window) {
     this.window = window;
@@ -170,10 +171,20 @@ export default class Tile {
     this.screen.height -= gapSize * 2;
   }
 
+  connect(signal: string, callback: (source: Meta.Window) => void) {
+    const signalId = this.window.connect(signal, callback);
+    this.signals.add(signalId);
+    return signalId;
+  }
+
   destroy() {
     for (const timeoutId of this.timeouts) {
       GLib.source_remove(timeoutId);
     }
+    for (const signalId of this.signals) {
+      this.window.disconnect(signalId);
+    }
     this.timeouts.clear();
+    this.signals.clear();
   }
 }
