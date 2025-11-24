@@ -20,7 +20,7 @@ export default class TileManager {
     const tile = new Tile(window);
     const windowId = window.get_id();
     this.tiles.set(windowId, tile);
-    window.connect('unmanaged', () => {
+    tile.connect('unmanaged', () => {
       tile.destroy();
       this.tiles.delete(windowId);
     });
