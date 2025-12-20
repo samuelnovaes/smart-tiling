@@ -15,10 +15,10 @@ export default class SmartTilingExtension extends Extension {
     this.mutterKeybindingsSettings = this.getSettings('org.gnome.mutter.keybindings');
     this.settings = this.getSettings();
     this.tileManager = new TileManager(this.settings);
-    this.gnomeKeybindingsSettings.set_strv('maximize', []);
-    this.gnomeKeybindingsSettings.set_strv('unmaximize', []);
-    this.mutterKeybindingsSettings.set_strv('toggle-tiled-left', []);
-    this.mutterKeybindingsSettings.set_strv('toggle-tiled-right', []);
+    this.gnomeKeybindingsSettings.set_strv('maximize', ['<Ctrl><Super>Up']);
+    this.gnomeKeybindingsSettings.set_strv('unmaximize', ['<Ctrl><Super>Down']);
+    this.mutterKeybindingsSettings.set_strv('toggle-tiled-left', ['<Ctrl><Super>Left']);
+    this.mutterKeybindingsSettings.set_strv('toggle-tiled-right', ['<Ctrl><Super>Right']);
     this.keybindings = new Keybindings(this.settings);
     this.keybindings.add('move-window-right', this.tileManager.moveRight.bind(this.tileManager));
     this.keybindings.add('move-window-left', this.tileManager.moveLeft.bind(this.tileManager));
