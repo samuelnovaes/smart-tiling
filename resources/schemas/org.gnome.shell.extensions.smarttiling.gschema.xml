@@ -21,7 +21,7 @@
       <summary>Move focused window down</summary>
     </key>
     <key name="gap-size" type="i">
-      <default>0</default>
+      <default>4</default>
       <summary>Size of the gaps between windows (in pixels)</summary>
     </key>
   </schema>
