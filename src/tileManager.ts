@@ -117,4 +117,4 @@ export default class TileManager {
     }
     this.tiles.clear();
   }
-};
+}
