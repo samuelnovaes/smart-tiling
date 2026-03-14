@@ -5,15 +5,9 @@ import Gio from 'gi://Gio';
 export default class TileManager {
   private tiles: Map<number, Tile> = new Map();
   private settings: Gio.Settings;
-  private windowCreatedSignal: number;
 
   constructor(settings: Gio.Settings) {
     this.settings = settings;
-    this.windowCreatedSignal = global.display.connect('window-created', (_, window) => {
-      if (window.get_window_type() === Meta.WindowType.NORMAL) {
-        this.createTileForWindow(window);
-      }
-    });
   }
 
   private createTileForWindow(window: Meta.Window) {
@@ -118,7 +112,6 @@ export default class TileManager {
   }
 
   destroy() {
-    global.display.disconnect(this.windowCreatedSignal);
     for (const tile of this.tiles.values()) {
       tile.destroy();
     }
