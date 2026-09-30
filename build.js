@@ -11,6 +11,7 @@ const distPath = resolve(__dirname, 'dist');
 const zipPath = resolve(__dirname, `${metadata.uuid}.zip`);
 
 cpSync(resourcePath, distPath, { recursive: true });
+cpSync(resolve(__dirname, 'LICENSE'), resolve(distPath, 'LICENSE'));
 
 for (const file of readdirSync(poPath).filter(file => file.endsWith('.po'))) {
   const localePath = resolve(distPath, 'locale', basename(file, '.po'), 'LC_MESSAGES');

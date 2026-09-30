@@ -16,11 +16,11 @@ must not be repeated.
   - `prefs.ts` — `ExtensionPreferences` subclass (runs in the GTK preferences process).
   - `tileManager.ts`, `tile.ts`, `keybindings.ts` — Shell-side logic, each class owning its own cleanup via `destroy()`.
   - `ambient.d.ts`, `position.d.ts` — type declarations only.
-- `resources/` — copied as-is into the ZIP: `metadata.json`, `LICENSE`, `schemas/*.gschema.xml`.
+- `resources/` — copied as-is into the ZIP: `metadata.json`, `schemas/*.gschema.xml`.
 - `po/` — gettext translations (`<lang>.po`) for the preferences window; English is the source language and fallback.
 - `tests/` — Vitest unit tests (`*.test.ts`) and `mocks/` replacing `gi://` and `resource:///` modules;
   never shipped in the ZIP.
-- `build.js` — copies `resources/` into `dist/`, compiles `po/*.po` into `locale/<lang>/LC_MESSAGES/<uuid>.mo`
+- `build.js` — copies `resources/` and the root `LICENSE` into `dist/`, compiles `po/*.po` into `locale/<lang>/LC_MESSAGES/<uuid>.mo`
   and zips it as `<uuid>.zip`.
 
 ## Commands
