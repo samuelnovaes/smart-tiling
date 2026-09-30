@@ -33,6 +33,14 @@ export default class SmartTilingPreferences extends ExtensionPreferences {
 
     settings.bind('gap-size', gapRow, 'value', Gio.SettingsBindFlags.DEFAULT);
 
+    const autoTilingRow = new Adw.SwitchRow({
+      title: _('Auto Tiling'),
+      subtitle: _('Automatically arrange up to four windows per workspace into halves and quarters.')
+    });
+    group.add(autoTilingRow);
+
+    settings.bind('auto-tiling', autoTilingRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+
     const shortcutsGroup = new Adw.PreferencesGroup({
       title: _('Keyboard Shortcuts'),
       description: _('Click a shortcut to change it.')

@@ -24,5 +24,9 @@
       <default>4</default>
       <summary>Size of the gaps between windows (in pixels)</summary>
     </key>
+    <key name="auto-tiling" type="b">
+      <default>false</default>
+      <summary>Automatically tile up to four windows per workspace</summary>
+    </key>
   </schema>
 </schemalist>
