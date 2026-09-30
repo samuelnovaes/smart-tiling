@@ -10,6 +10,8 @@ import type Widget from './mocks/widget.js';
 type Row = Widget & { suffixes: Widget[] };
 type Dialog = Widget & { controllers: Widget[], responses: Map<string, string>, close: () => void, present: () => void };
 
+const AlertDialog = Adw.AlertDialog as unknown as { instances: Dialog[] };
+
 describe('SmartTilingPreferences', () => {
   let settings: Settings;
   let window: Widget;
@@ -19,21 +21,21 @@ describe('SmartTilingPreferences', () => {
 
   const openDialog = (index: number) => {
     shortcutRow(index).emit('activated');
-    return Adw.AlertDialog.instances.at(-1) as unknown as Dialog;
+    return AlertDialog.instances.at(-1)!;
   };
 
   const press = (dialog: Dialog, keyval: number, state = 0) => dialog.controllers[0].emit('key-pressed', keyval, 0, state);
 
   beforeEach(async () => {
-    Adw.AlertDialog.instances = [];
+    AlertDialog.instances = [];
     settings = new Settings({
       'move-window-left': ['<Super>Left'],
       'move-window-right': ['<Super>Right'],
       'move-window-up': ['<Super>Up'],
       'move-window-down': []
     });
-    const preferences = new SmartTilingPreferences();
-    preferences.getSettings.mockReturnValue(settings);
+    const preferences = new SmartTilingPreferences({} as never);
+    vi.mocked(preferences.getSettings).mockReturnValue(settings as never);
     window = new Adw.PreferencesWindow() as unknown as Widget;
     await preferences.fillPreferencesWindow(window as never);
     groups = (window.children[0] as Widget).children as Widget[];

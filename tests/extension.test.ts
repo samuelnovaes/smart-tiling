@@ -3,6 +3,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import SmartTilingExtension from '../src/extension.js';
 import TileManager from '../src/tileManager.js';
 import Settings from './mocks/settings.js';
+import type Signals from './mocks/signals.js';
 import { stubShellGlobals } from './mocks/global.js';
 import type { Button } from './mocks/shell/panelMenu.js';
 
@@ -21,7 +22,7 @@ describe('SmartTilingExtension', () => {
       'org.gnome.shell.extensions.smarttiling': new Settings({ 'auto-tiling': false, 'gap-size': 0 })
     };
     extension = new SmartTilingExtension({ name: 'Smart Tiling', uuid: 'smarttiling@test' } as never);
-    extension.getSettings.mockImplementation(
+    vi.mocked(extension.getSettings).mockImplementation(
       (schema = 'org.gnome.shell.extensions.smarttiling') => settings[schema] as never
     );
   });
@@ -51,7 +52,7 @@ describe('SmartTilingExtension', () => {
     const spy = vi.spyOn(TileManager.prototype, method);
     extension.enable();
     const call = vi.mocked(Main.wm.addKeybinding).mock.calls.find(([name]) => name === key)!;
-    call[4]();
+    (call[4] as () => void)();
     expect(spy).toHaveBeenCalledOnce();
   });
 
@@ -65,7 +66,7 @@ describe('SmartTilingExtension', () => {
     expect(button.destroy).toHaveBeenCalled();
     expect(Main.wm.removeKeybinding).toHaveBeenCalledTimes(4);
     expect(smartTiling.handlerCount()).toBe(0);
-    expect(global.display.handlerCount()).toBe(0);
+    expect((global.display as unknown as Signals).handlerCount()).toBe(0);
   });
 
   it('can be disabled without being enabled', () => {

@@ -15,7 +15,7 @@ describe('Indicator', () => {
 
   beforeEach(() => {
     settings = new Settings({ 'auto-tiling': true });
-    indicator = new Indicator(new Extension({ name: 'Smart Tiling', uuid: 'smarttiling@test' }) as never, settings as never);
+    indicator = new Indicator(new Extension({ name: 'Smart Tiling', uuid: 'smarttiling@test' } as never) as never, settings as never);
     button = vi.mocked(Main.panel.addToStatusArea).mock.calls[0][1] as unknown as Button;
   });
 

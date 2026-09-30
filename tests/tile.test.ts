@@ -70,8 +70,8 @@ describe('Tile', () => {
 
     const callback = vi.mocked(GLib.timeout_add).mock.calls[0][2];
     const moveResize = vi.spyOn(window, 'move_resize_frame').mockImplementationOnce(() => {});
-    expect(callback()).toBe(GLib.SOURCE_CONTINUE);
-    expect(callback()).toBe(GLib.SOURCE_REMOVE);
+    expect(callback(null)).toBe(GLib.SOURCE_CONTINUE);
+    expect(callback(null)).toBe(GLib.SOURCE_REMOVE);
     expect(moveResize).toHaveBeenCalledTimes(2);
     expect(positionOf(window)).toBe(Position.LEFT);
 
