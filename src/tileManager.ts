@@ -13,11 +13,11 @@ const SPLITS = new Map<Position, [Position, Position]>([
 const MERGES = new Map<Position, [Position, Position][][]>([
   [Position.LEFT, [
     [[Position.RIGHT, Position.MAXIMIZED]],
-    [[Position.TOP_RIGHT, Position.TOP], [Position.BOTTOM_RIGHT, Position.BOTTOM]]
+    [[Position.TOP_RIGHT, Position.LEFT], [Position.BOTTOM_RIGHT, Position.RIGHT]]
   ]],
   [Position.RIGHT, [
     [[Position.LEFT, Position.MAXIMIZED]],
-    [[Position.TOP_LEFT, Position.TOP], [Position.BOTTOM_LEFT, Position.BOTTOM]]
+    [[Position.TOP_LEFT, Position.LEFT], [Position.BOTTOM_LEFT, Position.RIGHT]]
   ]],
   [Position.TOP, [
     [[Position.BOTTOM, Position.MAXIMIZED]],
@@ -27,17 +27,37 @@ const MERGES = new Map<Position, [Position, Position][][]>([
     [[Position.TOP, Position.MAXIMIZED]],
     [[Position.TOP_LEFT, Position.LEFT], [Position.TOP_RIGHT, Position.RIGHT]]
   ]],
-  [Position.TOP_LEFT, [[[Position.BOTTOM_LEFT, Position.LEFT]], [[Position.TOP_RIGHT, Position.TOP]]]],
-  [Position.TOP_RIGHT, [[[Position.BOTTOM_RIGHT, Position.RIGHT]], [[Position.TOP_LEFT, Position.TOP]]]],
-  [Position.BOTTOM_LEFT, [[[Position.TOP_LEFT, Position.LEFT]], [[Position.BOTTOM_RIGHT, Position.BOTTOM]]]],
-  [Position.BOTTOM_RIGHT, [[[Position.TOP_RIGHT, Position.RIGHT]], [[Position.BOTTOM_LEFT, Position.BOTTOM]]]]
+  [Position.TOP_LEFT, [[[Position.BOTTOM_LEFT, Position.LEFT]]]],
+  [Position.TOP_RIGHT, [[[Position.BOTTOM_RIGHT, Position.RIGHT]]]],
+  [Position.BOTTOM_LEFT, [[[Position.TOP_LEFT, Position.LEFT]]]],
+  [Position.BOTTOM_RIGHT, [[[Position.TOP_RIGHT, Position.RIGHT]]]]
 ]);
+
+const CELLS = new Map<Position, number>([
+  [Position.TOP_LEFT, 0b0001],
+  [Position.TOP_RIGHT, 0b0010],
+  [Position.BOTTOM_LEFT, 0b0100],
+  [Position.BOTTOM_RIGHT, 0b1000],
+  [Position.TOP, 0b0011],
+  [Position.BOTTOM, 0b1100],
+  [Position.LEFT, 0b0101],
+  [Position.RIGHT, 0b1010],
+  [Position.MAXIMIZED, 0b1111]
+]);
+
+const LAYOUTS: Position[][] = [
+  [Position.MAXIMIZED],
+  [Position.LEFT, Position.RIGHT],
+  [Position.LEFT, Position.TOP_RIGHT, Position.BOTTOM_RIGHT],
+  [Position.TOP_LEFT, Position.TOP_RIGHT, Position.BOTTOM_RIGHT, Position.BOTTOM_LEFT]
+];
 
 export default class TileManager {
   private tiles: Map<number, Tile> = new Map();
   private newWindows: Set<number> = new Set();
   private settings: Gio.Settings;
   private windowCreatedId: number;
+  private autoTilingChangedId: number;
 
   constructor(settings: Gio.Settings) {
     this.settings = settings;
@@ -47,6 +67,16 @@ export default class TileManager {
     this.windowCreatedId = global.display.connect('window-created', (_display, window: Meta.Window) => {
       this.newWindows.add(window.get_id());
       this.createTileForWindow(window);
+    });
+    this.autoTilingChangedId = this.settings.connect('changed::auto-tiling', () => {
+      if (!this.settings.get_boolean('auto-tiling')) {
+        return;
+      }
+      const windows = global.workspace_manager.get_active_workspace().list_windows()
+        .filter(window => !window.minimized && this.isAutoTileable(window));
+      for (let monitor = 0; monitor < global.display.get_n_monitors(); monitor++) {
+        this.arrange(windows.filter(window => window.get_monitor() === monitor));
+      }
     });
   }
 
@@ -106,30 +136,43 @@ export default class TileManager {
   }
 
   private getNeighbors(window: Meta.Window) {
-    const neighbors = new Map<Position, Tile>();
-    for (const other of window.get_workspace().list_windows()) {
-      if (other !== window && !other.minimized && other.get_monitor() === window.get_monitor() && this.isAutoTileable(other)) {
-        const tile = this.getTile(other);
-        neighbors.set(tile.getPosition(), tile);
-      }
+    return window.get_workspace().list_windows().filter(other => other !== window
+      && !other.minimized
+      && other.get_monitor() === window.get_monitor()
+      && this.isAutoTileable(other));
+  }
+
+  private getTilesByPosition(windows: Meta.Window[]) {
+    const tiles = new Map<Position, Tile>();
+    for (const window of windows) {
+      const tile = this.getTile(window);
+      tiles.set(tile.getPosition(), tile);
     }
-    return neighbors;
+    return tiles;
+  }
+
+  private covers(positions: Iterable<Position>) {
+    let cells = 0;
+    for (const position of positions) {
+      cells |= CELLS.get(position) ?? 0;
+    }
+    return cells === CELLS.get(Position.MAXIMIZED);
   }
 
   private insert(window: Meta.Window) {
     if (!this.isAutoTileable(window)) {
       return;
     }
-    const tile = this.getTile(window);
-    const neighbors = this.getNeighbors(window);
-    if (neighbors.size === 0) {
-      return tile.move(Position.MAXIMIZED);
+    const neighborWindows = this.getNeighbors(window);
+    const neighbors = this.getTilesByPosition(neighborWindows);
+    if (!this.covers(neighbors.keys())) {
+      return this.arrange([window, ...neighborWindows]);
     }
     for (const [position, [kept, added]] of SPLITS) {
       const neighbor = neighbors.get(position);
       if (neighbor) {
         neighbor.move(kept);
-        return tile.move(added);
+        return this.getTile(window).move(added);
       }
     }
   }
@@ -138,16 +181,29 @@ export default class TileManager {
     if (!this.isAutoTileable(window)) {
       return;
     }
-    const neighbors = this.getNeighbors(window);
-    const merges = MERGES.get(this.getTile(window).getPosition()) ?? [];
-    for (const merge of merges) {
-      if (merge.every(([from]) => neighbors.has(from))) {
-        for (const [from, to] of merge) {
-          neighbors.get(from)?.move(to);
-        }
-        return;
-      }
+    const neighborWindows = this.getNeighbors(window);
+    const neighbors = this.getTilesByPosition(neighborWindows);
+    if (this.covers(neighbors.keys())) {
+      return;
     }
+    const position = this.getTile(window).getPosition();
+    const merge = MERGES.get(position)?.find(candidate => candidate.every(([from]) => neighbors.has(from)));
+    if (!merge || !this.covers([position, ...neighbors.keys()])) {
+      return this.arrange(neighborWindows);
+    }
+    for (const [from, to] of merge) {
+      neighbors.get(from)?.move(to);
+    }
+  }
+
+  private arrange(windows: Meta.Window[]) {
+    if (windows.length === 0) {
+      return;
+    }
+    const sortedWindows = global.display.sort_windows_by_stacking(windows).reverse();
+    const freePositions = new Set(LAYOUTS[Math.min(sortedWindows.length, LAYOUTS.length) - 1]);
+    const misplacedWindows = sortedWindows.filter(window => !freePositions.delete(this.getTile(window).getPosition()));
+    [...freePositions].forEach((position, index) => this.getTile(misplacedWindows[index]).move(position));
   }
 
   moveRight() {
@@ -230,6 +286,7 @@ export default class TileManager {
 
   destroy() {
     global.display.disconnect(this.windowCreatedId);
+    this.settings.disconnect(this.autoTilingChangedId);
     this.newWindows.clear();
     for (const tile of this.tiles.values()) {
       tile.destroy();
