@@ -1,5 +1,6 @@
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import Gio from 'gi://Gio';
+import Indicator from './indicator.js';
 import Keybindings from './keybindings.js';
 import TileManager from './tileManager.js';
 
@@ -9,6 +10,7 @@ export default class SmartTilingExtension extends Extension {
   private gnomeKeybindingsSettings: Gio.Settings | null = null;
   private mutterKeybindingsSettings: Gio.Settings | null = null;
   private tileManager: TileManager | null = null;
+  private indicator: Indicator | null = null;
 
   override enable() {
     this.gnomeKeybindingsSettings = this.getSettings('org.gnome.desktop.wm.keybindings');
@@ -24,15 +26,18 @@ export default class SmartTilingExtension extends Extension {
     this.keybindings.add('move-window-left', this.tileManager.moveLeft.bind(this.tileManager));
     this.keybindings.add('move-window-up', this.tileManager.moveUp.bind(this.tileManager));
     this.keybindings.add('move-window-down', this.tileManager.moveDown.bind(this.tileManager));
+    this.indicator = new Indicator(this, this.settings);
   }
 
   override disable() {
+    this.indicator?.destroy();
     this.keybindings?.destroy();
     this.tileManager?.destroy();
     this.gnomeKeybindingsSettings?.reset('maximize');
     this.gnomeKeybindingsSettings?.reset('unmaximize');
     this.mutterKeybindingsSettings?.reset('toggle-tiled-left');
     this.mutterKeybindingsSettings?.reset('toggle-tiled-right');
+    this.indicator = null;
     this.keybindings = null;
     this.tileManager = null;
     this.gnomeKeybindingsSettings = null;
