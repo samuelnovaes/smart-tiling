@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { defineConfig } from 'eslint/config';
-import importPlugin from 'eslint-plugin-import';
+import { importX } from 'eslint-plugin-import-x';
 import stylistic from '@stylistic/eslint-plugin';
 
 export default defineConfig([
@@ -13,7 +13,7 @@ export default defineConfig([
     languageOptions: { globals: globals.node }
   },
   tseslint.configs.recommended,
-  importPlugin.flatConfigs.recommended,
+  importX.flatConfigs.recommended,
   stylistic.configs.recommended,
   {
     rules: {
@@ -30,8 +30,8 @@ export default defineConfig([
           { blankLine: 'always', prev: '*', next: 'method' }
         ]
       }],
-      'import/newline-after-import': ['error', { count: 1 }],
-      'import/no-unresolved': 'off'
+      'import-x/newline-after-import': ['error', { count: 1 }],
+      'import-x/no-unresolved': 'off'
     }
   }
 ]);
