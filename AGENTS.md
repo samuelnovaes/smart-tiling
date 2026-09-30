@@ -18,6 +18,8 @@ must not be repeated.
   - `ambient.d.ts`, `position.d.ts` — type declarations only.
 - `resources/` — copied as-is into the ZIP: `metadata.json`, `LICENSE`, `schemas/*.gschema.xml`.
 - `po/` — gettext translations (`<lang>.po`) for the preferences window; English is the source language and fallback.
+- `tests/` — Vitest unit tests (`*.test.ts`) and `mocks/` replacing `gi://` and `resource:///` modules;
+  never shipped in the ZIP.
 - `build.js` — copies `resources/` into `dist/`, compiles `po/*.po` into `locale/<lang>/LC_MESSAGES/<uuid>.mo`
   and zips it as `<uuid>.zip`.
 
@@ -26,11 +28,13 @@ must not be repeated.
 ```bash
 npm ci            # install dependencies
 npm run lint      # lint sources
+npm test          # unit tests with coverage (fails below 100%)
 npm run build     # tsc -> eslint --fix dist -> zip (smarttiling@samuelnovaes.zip)
 gnome-extensions install --force smarttiling@samuelnovaes.zip
 ```
 
-Always run `npm run lint` and `npm run build` before considering a change done.
+Always run `npm run lint`, `npm test` and `npm run build` before considering a change done.
+Coverage must stay at 100% (statements, branches, functions and lines): every change to `src/` needs tests.
 Inspect the generated `dist/*.js`: reviewers read the **compiled JavaScript**, not the TypeScript.
 
 ## Lessons from rejected submissions
@@ -143,7 +147,7 @@ These came from actual EGO reviews of this extension:
 
 ## Checklist before submitting to EGO
 
-- [ ] `npm run lint` and `npm run build` pass without errors.
+- [ ] `npm run lint`, `npm test` (100% coverage) and `npm run build` pass without errors.
 - [ ] `dist/` has one readable `.js` per source file, with blank lines between methods.
 - [ ] No `?version=` in any `gi://` import.
 - [ ] Every signal, timeout, keybinding and settings change made in `enable()` is undone in `disable()`, and
