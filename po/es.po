@@ -1,0 +1,59 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: smarttiling@samuelnovaes\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Smart Tiling"
+msgstr "Smart Tiling"
+
+msgid "General Settings"
+msgstr "Configuración general"
+
+msgid "Configure the general settings for Smart Tiling extension."
+msgstr "Configure las opciones generales de la extensión Smart Tiling."
+
+msgid "Gap Size"
+msgstr "Tamaño del espacio"
+
+msgid "Set the size of the gaps between tiled windows."
+msgstr "Establece el tamaño del espacio entre las ventanas organizadas."
+
+msgid "Auto Tiling"
+msgstr "Organización automática"
+
+msgid "Automatically arrange up to four windows per workspace into halves and quarters."
+msgstr "Organiza automáticamente hasta cuatro ventanas por área de trabajo en mitades y cuartos."
+
+msgid "Keyboard Shortcuts"
+msgstr "Atajos de teclado"
+
+msgid "Click a shortcut to change it."
+msgstr "Haga clic en un atajo para cambiarlo."
+
+msgid "Move Window Left"
+msgstr "Mover ventana a la izquierda"
+
+msgid "Move Window Right"
+msgstr "Mover ventana a la derecha"
+
+msgid "Move Window Up"
+msgstr "Mover ventana arriba"
+
+msgid "Move Window Down"
+msgstr "Mover ventana abajo"
+
+msgid "Disabled"
+msgstr "Desactivado"
+
+msgid "Reset to Default"
+msgstr "Restablecer valor predeterminado"
+
+msgid "Press the new shortcut, Esc to cancel or Backspace to disable it."
+msgstr "Pulse el nuevo atajo, Esc para cancelar o Retroceso para desactivarlo."
+
+msgid "Cancel"
+msgstr "Cancelar"

@@ -17,7 +17,9 @@ must not be repeated.
   - `tileManager.ts`, `tile.ts`, `keybindings.ts` — Shell-side logic, each class owning its own cleanup via `destroy()`.
   - `ambient.d.ts`, `position.d.ts` — type declarations only.
 - `resources/` — copied as-is into the ZIP: `metadata.json`, `LICENSE`, `schemas/*.gschema.xml`.
-- `build.js` — copies `resources/` into `dist/` and zips it as `<uuid>.zip`.
+- `po/` — gettext translations (`<lang>.po`) for the preferences window; English is the source language and fallback.
+- `build.js` — copies `resources/` into `dist/`, compiles `po/*.po` into `locale/<lang>/LC_MESSAGES/<uuid>.mo`
+  and zips it as `<uuid>.zip`.
 
 ## Commands
 
@@ -121,7 +123,7 @@ These came from actual EGO reviews of this extension:
 ### Package contents
 
 - The ZIP must contain only what the extension needs at runtime: compiled `.js`, `metadata.json`, `schemas/`,
-  `LICENSE`. No build scripts, `node_modules`, TypeScript sources, source maps or unused media.
+  `locale/`, `LICENSE`. No build scripts, `node_modules`, TypeScript sources, source maps or unused media.
 - No binaries or native libraries. External scripts, if ever needed, must be GJS and exit cleanly.
 - Never spawn privileged processes (if unavoidable: `pkexec` on a non-user-writable executable).
 

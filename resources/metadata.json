@@ -8,5 +8,6 @@
   ],
   "version": 6,
   "settings-schema": "org.gnome.shell.extensions.smarttiling",
+  "gettext-domain": "smarttiling@samuelnovaes",
   "url": "https://github.com/samuelnovaes/smart-tiling"
 }
