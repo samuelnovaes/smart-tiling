@@ -21,7 +21,7 @@
       <summary>Move focused window down</summary>
     </key>
     <key name="gap-size" type="i">
-      <default>4</default>
+      <default>8</default>
       <summary>Size of the gaps between windows (in pixels)</summary>
     </key>
     <key name="auto-tiling" type="b">
