@@ -33,5 +33,14 @@ export default defineConfig([
       'import-x/newline-after-import': ['error', { count: 1 }],
       'import-x/no-unresolved': 'off'
     }
+  },
+  {
+    files: ['dist/**/*.js'],
+    rules: {
+      '@stylistic/padding-line-between-statements': ['error',
+        { blankLine: 'always', prev: 'multiline-const', next: 'const' },
+        { blankLine: 'always', prev: '*', next: 'export' }
+      ]
+    }
   }
 ]);
