@@ -19,7 +19,7 @@ cd smart-tiling
 npm ci
 ```
 
-### 2. Build the aextension
+### 2. Build the extension
 
 ```bash
 npm run build
