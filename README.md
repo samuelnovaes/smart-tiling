@@ -1,6 +1,6 @@
-# Smart Tile
+# Smart Tiling 
 
-**WinTile** brings **Windows 10–style window snapping and tiling** to your GNOME desktop.  
+**Smart Tiling** brings **Windows 10–style window snapping and tiling** to your GNOME desktop.  
 Quickly organize and resize windows using familiar shortcuts — **Super + Arrow Keys** — to snap windows to halves or corners of your screen.
 
 ## Features
