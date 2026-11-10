@@ -4,7 +4,8 @@
   "uuid": "smarttiling@samuelnovaes",
   "shell-version": [
     "49",
-    "50"
+    "50",
+    "51"
   ],
   "version": 7,
   "settings-schema": "org.gnome.shell.extensions.smarttiling",
